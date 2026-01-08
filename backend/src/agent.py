@@ -12,7 +12,7 @@ from livekit.agents import (
     inference,
     room_io,
 )
-from livekit.plugins import noise_cancellation, silero
+from livekit.plugins import bithuman, noise_cancellation, silero
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
 logger = logging.getLogger("agent")
@@ -97,13 +97,13 @@ async def my_agent(ctx: JobContext):
     #     llm=openai.realtime.RealtimeModel(voice="marin")
     # )
 
-    # # Add a virtual avatar to the session, if desired
-    # # For other providers, see https://docs.livekit.io/agents/models/avatar/
-    # avatar = hedra.AvatarSession(
-    #   avatar_id="...",  # See https://docs.livekit.io/agents/models/avatar/plugins/hedra
-    # )
-    # # Start the avatar and wait for it to join
-    # await avatar.start(session, room=ctx.room)
+    # Add a virtual avatar to the session, if desired
+    # For other providers, see https://docs.livekit.io/agents/models/avatar/
+    avatar = bithuman.AvatarSession(
+        # avatar_id="...",  # See https://docs.livekit.io/agents/models/avatar/plugins/bithuman
+    )
+    # Start the avatar and wait for it to join
+    await avatar.start(session, room=ctx.room)
 
     # Start the session, which initializes the voice pipeline and warms up the models
     await session.start(
