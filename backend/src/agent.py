@@ -14,6 +14,7 @@ from livekit.agents import (
 )
 from livekit.plugins import bithuman, noise_cancellation, silero
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
+from custom_llm import NocoAILLM
 
 logger = logging.getLogger("agent")
 
@@ -71,8 +72,8 @@ async def my_agent(ctx: JobContext):
         # See all available models at https://docs.livekit.io/agents/models/stt/
         stt=inference.STT(model="deepgram/nova-3", language="multi"),
         # A Large Language Model (LLM) is your agent's brain, processing user input and generating a response
-        # See all available models at https://docs.livekit.io/agents/models/llm/
-        llm=inference.LLM(model="openai/gpt-4.1-mini"),
+        # Using custom NocoAI LLM API instead of LiveKit inference
+        llm=NocoAILLM(),
         # Text-to-speech (TTS) is your agent's voice, turning the LLM's text into speech that the user can hear
         # See all available models as well as voice selections at https://docs.livekit.io/agents/models/tts/
         tts=inference.TTS(
