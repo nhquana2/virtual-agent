@@ -12,7 +12,7 @@ from livekit.agents import (
     inference,
     room_io,
 )
-from livekit.plugins import bithuman, noise_cancellation, silero
+from livekit.plugins import bithuman, google, noise_cancellation, silero
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from custom_llm import NocoAILLM
 
@@ -66,18 +66,23 @@ async def my_agent(ctx: JobContext):
         "room": ctx.room.name,
     }
 
-    # Set up a voice AI pipeline using OpenAI, Cartesia, AssemblyAI, and the LiveKit turn detector
+    # Set up a voice AI pipeline using Google Cloud STT and TTS
     session = AgentSession(
-        # Speech-to-text (STT) is your agent's ears, turning the user's speech into text that the LLM can understand
-        # See all available models at https://docs.livekit.io/agents/models/stt/
-        stt=inference.STT(model="deepgram/nova-3", language="multi"),
+        # Speech-to-text (STT) using Google Cloud Speech-to-Text
+        # See https://docs.livekit.io/agents/models/stt/plugins/google/
+        stt=google.STT(
+            languages="vi-VN",  # Vietnamese
+            spoken_punctuation=False,
+        ),
         # A Large Language Model (LLM) is your agent's brain, processing user input and generating a response
         # Using custom NocoAI LLM API instead of LiveKit inference
         llm=NocoAILLM(),
-        # Text-to-speech (TTS) is your agent's voice, turning the LLM's text into speech that the user can hear
-        # See all available models as well as voice selections at https://docs.livekit.io/agents/models/tts/
-        tts=inference.TTS(
-            model="cartesia/sonic-3", voice="9626c31c-bec5-4cca-baa8-f8ba9e84c8bc"
+        # Text-to-speech (TTS) using Google Cloud Text-to-Speech
+        # See https://docs.livekit.io/agents/models/tts/plugins/google/
+        tts=google.TTS(
+            model_name="chirp_3",  # Use Chirp3 model for Vietnamese support
+            voice_name="vi-VN-Chirp3-HD-Aoede",  # Vietnamese Chirp3-HD female voice
+            language="vi-VN",
         ),
         # VAD and turn detection are used to determine when the user is speaking and when the agent should respond
         # See more at https://docs.livekit.io/agents/build/turns
